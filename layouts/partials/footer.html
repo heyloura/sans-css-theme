@@ -1,3 +1,16 @@
+<hr/>
+<div class="h-card">
+    <h1>
+        <img loading="lazy" 
+        src="{{ .Site.Author.avatar }}" 
+        alt="{{ .Site.Title }} Profile Photo" 
+        class="u-photo" 
+        width="20" 
+        height="20">
+        <a class="p-name u-url" href="/">{{ .Site.Title }}</a> a level {{ len ((where .Site.Pages "Type" "post").GroupByDate "2006" )}} webmaster
+    </h1>
+</div>
+<hr/>
 <ul role="navigation">
     <li>
         <a href="/archive">
@@ -20,29 +33,3 @@
         </a>
     </li>
 </ul>
-<aside>
-    <header><h5>Indieweb</h5></header>
-    <ul>
-        <li><a target="_blank" href="https://xn--sr8hvo.ws">🕸️💍</a>
-        <a target="_blank" href="https://xn--sr8hvo.ws/%F0%9F%91%8D%F0%9F%93%8A%F0%9F%92%85/previous">⬅️</a>
-        <a target="_blank" href="https://xn--sr8hvo.ws/%F0%9F%91%8D%F0%9F%93%8A%F0%9F%92%85/next">➡️</a></li>
-        <li><a target="_blank" href="https://indieweb.org/">
-        <img src="https://heyloura.com/uploads/2022/4af033892a.png" height="25" alt="IndieWebCamp" style="image-rendering:pixelated;">
-        </a></li>
-        <li><img src="https://heyloura.com/uploads/2022/04d164b1ac.png" height="25" alt="Webmention" style="image-rendering:pixelated;"></li>
-        <li><img src="https://heyloura.com/uploads/2022/927e2836c9.png" height="25" alt="Microformats" style="image-rendering:pixelated;"></li>
-    </ul>
-    <header><h5>Spaces</h5></header>
-    <ul>
-        <li><a target="_blank" href="https://micro.blog/heyloura">✴️ Micro.blog account</a></li>
-        <li><a target="_blank" href="gemini://capsule.heyloura.com">🚀 Hosted on Gemini</a></li>
-        <li><a style="font-size: 0.9em;" href="https://micro.blog/heyloura?remote_follow=1">💫 @heyloura@heyloura.com</a></li>       
-        <li><a target="_blank" href="https://github.com/heyloura">🐈‍⬛ Github Projects</a></li>
-    </ul>
-    
-    <header><h5>Analytics</h5></header>
-    <p><small><span class="tinylytics_hits">17,175</span> website hits tracked by <a href="https://tinylytics.app/public/k8W9_T_FtwGM-5zeSNC7">tinylytics.app</a></small>
-    <a href="https://scribbles.rscottjones.com" target="_blank" class="tinylytics_webring">
-        <img class="tinylytics_webring_avatar" src="" style="display: none">🕸️💍
-    </a></p>
-</aside>

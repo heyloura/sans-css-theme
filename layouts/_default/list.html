@@ -26,51 +26,51 @@
     {{- $title := .Title -}}
     {{ $paginator := .Paginate (where .Pages.ByDate.Reverse "Type" "post") (index .Site.Params "archive-paginate" | default 3) }}
         {{ range $paginator.Pages  }}
-        <dl class="h-entry">
+        <article class="h-entry">
             {{ if .Title }}
-                <dt class="p-name">
+                <header class="p-name">
                     <a href="{{ .Permalink }}" class="u-url">
                         {{ .Title }}
                     </a>   
-                </dt> 
-                <dd>
+                </header> 
+                <div>
                     <b>Published</b>: <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
                         {{ .Date.Format "02 Jan 2006" }}
                     </time>
-                </dd> 
+                </div> 
                 {{ if gt (len .Content) 600 }}
-                <dd class="p-summary">
+                <div class="p-summary">
                     {{ .Content | safeHTML | strings.Truncate 600 }}
-                </dd> 
-                <dd>
+                </div> 
+                <div>
                     <a href="{{ .Permalink }}">Read More →</a>
-                </dd>
+                </div>
                 {{ else }}
-                <dd class="e-content">
+                <div class="e-content">
                     {{ .Content }}
-                </dd>            
+                </div>            
                 {{ end }}
             {{ else }}
-                <dt>
+                <header>
                     <a href="{{ .Permalink }}" class="u-url">
                         <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
                             {{ .Date.Format "02 Jan 2006" }}
                         </time>
                     </a>   
-                </dt>
-                <dd class="e-content">
+                </header>
+                <div class="e-content">
                 {{ .Content }}
-                </dd>
+                </div>
             {{ end }}
             {{- if compare.Gt .Lastmod .Date -}}
-            <dd>
-                <b>Updated</b>: <time class="dt-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
+            <div>
+                <b>Updated</b>: <time class="header-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
                     {{  .Lastmod.Format "02 Jan 2006" }}
                 </time>
-            </dd>
+            </div>
             {{- end -}}
             {{ if .Params.categories }}
-            <dd>
+            <div>
                 <b>Filed under</b>:
                 <ul>
                     {{ range .Params.categories }} 
@@ -78,9 +78,9 @@
                     <li><a class="p-category" href="{{ $href }}">{{ . | safeHTML }}</a></li> 
                     {{ end }}
                 </ul>
-            </dd>
+            </div>
             {{ end }}
-        </dl>
+        </article>
         <hr/>
         {{ end }}
     </div>
@@ -154,22 +154,22 @@
 {{ if in .Site.Data.bookshelves $bookshelf}}
     <hr/>
     <h2>Books:</h2>
-    <dl>
+    <article>
     {{ range (index .Site.Data.bookshelves $bookshelf) }}
-        <dt>
+        <header>
             <a href="https://micro.blog/books/{{ .isbn }}">
                 <img src="{{ .cover_url }}" loading="lazy" />
             </a>
-        </dt>
-        <dd>
+        </header>
+        <div>
             <b>Title</b>: 
             <a href="https://micro.blog/books/{{ .isbn }}">
                 <h3 class="bookshelf__title">{{ .title }}</h3>
             </a>
-        </dd>
-        <dd>
+        </div>
+        <div>
             <b>Author</b>: {{ .author }}
-        </dd>
+        </div>
     {{ end }}
     </ul>
 {{end}}

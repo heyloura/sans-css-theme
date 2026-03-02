@@ -2,39 +2,39 @@
     {{ $pages := (where .Site.Pages.ByLastmod.Reverse "Type" "post") }}
     {{- $paginator := .Paginate $pages (index .Site.Params "archive-paginate" | default 1) }}
     {{- range $paginator.Pages  }}
-    <dl class="h-entry" role="main">
+    <article class="h-entry" role="main">
         {{ if .Title }}
-            <dt class="p-name">
+            <header class="p-name">
                 <a href="{{ .Permalink }}" class="u-url">
                     &#128279; {{ .Title }}
                 </a>   
-            </dt> 
+            </header> 
         {{ else }}
-            <dt>
+            <header>
                 <a href="{{ .Permalink }}" class="u-url">
                     <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
                         &#128279; {{ .Date.Format "02 Jan 2006" }}
                     </time>
                 </a>   
-            </dt>
+            </header>
         {{ end }}
-            <dd>
+            <!-- <div>
                 <b>Published</b>: <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
                     {{ .Date.Format "02 Jan 2006" }}
                 </time>
-            </dd> 
-            <dd class="e-content">
+            </div>  -->
+            <div class="e-content">
                 {{ .Content }}
-            </dd>
+            </div>
         {{- if compare.Gt .Lastmod .Date -}}
-            <dd>
-                <b>Updated</b>: <time class="dt-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
+            <!--<div>
+                <b>Updated</b>: <time class="header-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
                     {{  .Lastmod.Format "02 Jan 2006" }}
                 </time>
-            </dd>
+            </div>-->
         {{- end -}}
         {{ if .Params.categories }}
-            <dd>
+            <div>
                 <b>Filed under</b>:
                 <ul>
                     {{ range .Params.categories }} 
@@ -42,7 +42,7 @@
                     <li><a class="p-category" href="{{ $href }}">{{ . | safeHTML }}</a></li> 
                     {{ end }}
                 </ul>
-            </dd>
+            </div>
         {{ end }}
 
         {{ $permalinkurl := urls.Parse .Permalink }}
@@ -54,7 +54,7 @@
             {{- end -}}
         {{- end -}}
         {{ with $backlinks }}
-            <dd>
+            <div>
                 <b>Backlinks</b>:
                 <ul>
                 {{ range $backlinks }}
@@ -65,51 +65,11 @@
                     {{- end}}
                 {{end}}
                 </ul>
-            </dd>
+            </div>
         {{ end }}
-    </dl>    
+    </article>    
     
-    <!--<h3>Conversation:</h3>-->
     <script type="text/javascript" src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
     {{ end }}
-
-    <!--<hr/>
-    <h2>Featured:</h2>
-    {{ $list := ($.Site.GetPage "taxonomyTerm" "categories").Pages }}
-    {{ if gt (len $list) 0 }}
-
-    {{ range $list }}
-        {{ if strings.Contains (lower .Title) "meta-" }}
-        {{ else if eq (lower .Title) "app defaults" }}
-        {{ else if eq (lower .Title) "change log" }}
-        {{ else if strings.Contains (lower .Title) "tags-" }}
-        {{ else }}
-            <p><a href="{{ .Permalink }}">&#128279;</a> <b>{{ strings.FirstUpper .Title }}</b></p>
-            <ol role="list">
-            {{ $category := .Title }}
-            {{ if eq $category "Side Projects" }}
-                <li class="h-entry">
-                    <a class="p-url p-name" href="https://heyloura.com/categories/lillihub/">Lillihub 🐸</a>
-                </li>
-            {{ else if eq $category "Micro.blog" }}
-
-            {{ end }}
-            {{ range (where .Site.Pages.ByDate.Reverse "Type" "post") }}
-                {{ if and (in .Params.categories $category) (in .Params.categories "meta-toc") }}
-                {{ if .Title }}
-                <li class="h-entry">
-                    <a class="p-url p-name" href="{{ if .Page.Params.redirect_url }}{{ .Page.Params.redirect_url }}{{ else }}{{ .Permalink }}{{ end }}">
-                        {{ .Title }}
-                    </a>
-                </li>
-                {{- end}}
-                {{- end}}
-            {{end}}
-            </ol>
-            {{- end }}
-        {{ end }}
-
-    {{ end }}
-        -->
 
 {{ end }}

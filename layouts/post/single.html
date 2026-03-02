@@ -1,37 +1,37 @@
 {{ define "main" }}
-<dl class="h-entry">
+<article class="h-entry">
     {{ if .Title }}
-        <dt class="p-name">
+        <header class="p-name">
             <h1><a href="{{ .Permalink }}" class="u-url">
                 &#128279; {{ .Title }}
             </a></h1>   
-        </dt> 
+        </header> 
     {{ else }}
-        <dt>
+        <header>
             <h1><a href="{{ .Permalink }}" class="u-url">
                 <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
                     &#128279; {{ .Date.Format "02 Jan 2006" }}
                 </time>
             </a></h1>   
-        </dt>
+        </header>
     {{ end }}
-        <dd>
+        <div>
             <b>Published</b>: <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
                 {{ .Date.Format "02 Jan 2006" }}
             </time>
-        </dd> 
-        <dd class="e-content">
+        </div> 
+        <div class="e-content">
             {{ .Content }}
-        </dd>
+        </div>
     {{- if compare.Gt .Lastmod .Date -}}
-        <dd>
-            <b>Updated</b>: <time class="dt-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
+        <div>
+            <b>Updated</b>: <time class="header-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
                 {{  .Lastmod.Format "02 Jan 2006" }}
             </time>
-        </dd>
+        </div>
     {{- end -}}
     {{ if .Params.categories }}
-        <dd>
+        <div>
             <b>Filed under</b>:
             <ul>
                 {{ range .Params.categories }} 
@@ -39,7 +39,7 @@
                 <li><a class="p-category" href="{{ $href }}">{{ . | safeHTML }}</a></li> 
                 {{ end }}
             </ul>
-        </dd>
+        </div>
     {{ end }}
     
     {{ $permalinkurl := urls.Parse .Permalink }}
@@ -51,7 +51,7 @@
         {{- end -}}
     {{- end -}}
     {{ with $backlinks }}
-        <dd>
+        <div>
             <b>Backlinks</b>:
             <ul>
             {{ range $backlinks }}
@@ -62,8 +62,8 @@
                 {{- end}}
             {{end}}
             </ul>
-        </dd>
+        </div>
     {{ end }}
-</dl>
+</article>
 <script src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
 {{ end }}
