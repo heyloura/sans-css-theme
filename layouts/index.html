@@ -1,75 +1,26 @@
 {{ define "main" }}
-    {{ $pages := (where .Site.Pages.ByLastmod.Reverse "Type" "post") }}
-    {{- $paginator := .Paginate $pages (index .Site.Params "archive-paginate" | default 1) }}
-    {{- range $paginator.Pages  }}
-    <article class="h-entry" role="main">
-        {{ if .Title }}
-            <header class="p-name">
+    <ul class="h-feed">
+    {{ $paginator := .Paginate (where .Pages.ByDate.Reverse "Type" "post") (index .Site.Params "archive-paginate" | default 10) }}
+        {{ range $paginator.Pages  }}
+        <li class="h-entry">
+            {{ if .Title }}
+                <a href="{{ .Permalink }}" class="u-url p-name">
+                        {{ .Title }}
+                </a> 
+            {{ else }}
                 <a href="{{ .Permalink }}" class="u-url">
-                    &#128279; {{ .Title }}
-                </a>   
-            </header> 
-        {{ else }}
-            <header>
-                <a href="{{ .Permalink }}" class="u-url">
-                    <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
-                        &#128279; {{ .Date.Format "02 Jan 2006" }}
+                    <time class="dt-published p-name" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
+                        {{ .Date.Format "02 Jan 2006" }}
                     </time>
                 </a>   
-            </header>
+            {{ end }}
+        </li>
         {{ end }}
-            <!-- <div>
-                <b>Published</b>: <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
-                    {{ .Date.Format "02 Jan 2006" }}
-                </time>
-            </div>  -->
-            <div class="e-content">
-                {{ .Content }}
-            </div>
-        {{- if compare.Gt .Lastmod .Date -}}
-            <!--<div>
-                <b>Updated</b>: <time class="header-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
-                    {{  .Lastmod.Format "02 Jan 2006" }}
-                </time>
-            </div>-->
-        {{- end -}}
-        {{ if .Params.categories }}
-            <div>
-                <b>Filed under</b>:
-                <ul>
-                    {{ range .Params.categories }} 
-                    {{ $href := print (absURL "categories/") (urlize (replace . "tags-" "")) }}
-                    <li><a class="p-category" href="{{ $href }}">{{ . | safeHTML }}</a></li> 
-                    {{ end }}
-                </ul>
-            </div>
-        {{ end }}
-
-        {{ $permalinkurl := urls.Parse .Permalink }}
-        {{ $relpermalink := .RelPermalink }}
-        {{ $backlinks := slice }}
-        {{- range .Site.Pages -}}
-            {{- if strings.Contains .Content $relpermalink -}}
-                {{ $backlinks = $backlinks | append . }}
-            {{- end -}}
-        {{- end -}}
-        {{ with $backlinks }}
-            <div>
-                <b>Backlinks</b>:
-                <ul>
-                {{ range $backlinks }}
-                    {{ if .Title }}
-                        <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
-                    {{- else}}
-                        <li><a href="{{ .Permalink }}">{{ .Summary | truncate 150 }}</a></li>
-                    {{- end}}
-                {{end}}
-                </ul>
-            </div>
-        {{ end }}
-    </article>    
-    
-    <script type="text/javascript" src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
-    {{ end }}
-
+    </ul>
+    {{- if or ($paginator.HasNext) ($paginator.HasPrev) }}
+    <ul>
+        {{ if $paginator.HasNext }}<li><a href="{{ $paginator.Next.URL }}">View older posts</a></li>{{ end }}
+        {{ if $paginator.HasPrev }}<li><a href="{{ $paginator.Prev.URL }}">View newer posts</a></li>{{ end }}
+    </ul>
+    {{- end }}
 {{ end }}

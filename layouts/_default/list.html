@@ -1,177 +1,26 @@
 {{ define "main" }}
-{{ $list_images := where .Pages ".Params.images" "!=" nil -}}
-	<h1>{{ strings.FirstUpper (replace .Title "tags-" "") }}</h1>	
-    {{ $category := .Title }}
-    {{ range .Site.Pages }}
-    {{- if and (in .Params.Navigation "false") (eq (lower .Params.Title) (lower $category))}}
-        {{ .Content }}
-    {{- end}}
-    {{ end }}
-    
-    <hr/>
-    <h2>Featured:</h2>
-    <ol role="list">
-        {{ range .Pages }}
-        {{ if in .Page.Params.categories "meta-toc" }}
-            <li class="h-entry">
-                <a class="u-url" href="{{ .Permalink }}">{{ .Title }}</a>
-            </li>
-        {{ end }}
-        {{ end }}
-    </ol>
-
-    <hr/>
-    <h2>Recent:</h2>
-    <div class="h-feed" role="main">
-    {{- $title := .Title -}}
-    {{ $paginator := .Paginate (where .Pages.ByDate.Reverse "Type" "post") (index .Site.Params "archive-paginate" | default 3) }}
+    <ul class="h-feed">
+    {{ $paginator := .Paginate (where .Pages.ByDate.Reverse "Type" "post") (index .Site.Params "archive-paginate" | default 10) }}
         {{ range $paginator.Pages  }}
-        <article class="h-entry">
+        <li class="h-entry">
             {{ if .Title }}
-                <header class="p-name">
-                    <a href="{{ .Permalink }}" class="u-url">
+                <a href="{{ .Permalink }}" class="u-url p-name">
                         {{ .Title }}
-                    </a>   
-                </header> 
-                <div>
-                    <b>Published</b>: <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
+                </a> 
+            {{ else }}
+                <a href="{{ .Permalink }}" class="u-url">
+                    <time class="dt-published p-name" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
                         {{ .Date.Format "02 Jan 2006" }}
                     </time>
-                </div> 
-                {{ if gt (len .Content) 600 }}
-                <div class="p-summary">
-                    {{ .Content | safeHTML | strings.Truncate 600 }}
-                </div> 
-                <div>
-                    <a href="{{ .Permalink }}">Read More →</a>
-                </div>
-                {{ else }}
-                <div class="e-content">
-                    {{ .Content }}
-                </div>            
-                {{ end }}
-            {{ else }}
-                <header>
-                    <a href="{{ .Permalink }}" class="u-url">
-                        <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
-                            {{ .Date.Format "02 Jan 2006" }}
-                        </time>
-                    </a>   
-                </header>
-                <div class="e-content">
-                {{ .Content }}
-                </div>
+                </a>   
             {{ end }}
-            {{- if compare.Gt .Lastmod .Date -}}
-            <div>
-                <b>Updated</b>: <time class="header-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
-                    {{  .Lastmod.Format "02 Jan 2006" }}
-                </time>
-            </div>
-            {{- end -}}
-            {{ if .Params.categories }}
-            <div>
-                <b>Filed under</b>:
-                <ul>
-                    {{ range .Params.categories }} 
-                    {{ $href := print (absURL "categories/") (urlize (replace . "tags-" "")) }}
-                    <li><a class="p-category" href="{{ $href }}">{{ . | safeHTML }}</a></li> 
-                    {{ end }}
-                </ul>
-            </div>
-            {{ end }}
-        </article>
-        <hr/>
+        </li>
         {{ end }}
-    </div>
+    </ul>
     {{- if or ($paginator.HasNext) ($paginator.HasPrev) }}
     <ul>
-        {{ if $paginator.HasNext }}<li><a href="{{ $paginator.Next.URL }}">← View older</a></li>{{ end }}
-        {{ if $paginator.HasPrev }}<li><a href="{{ $paginator.Prev.URL }}">View newer →</a></li>{{ end }}
+        {{ if $paginator.HasNext }}<li><a href="{{ $paginator.Next.URL }}">View older posts</a></li>{{ end }}
+        {{ if $paginator.HasPrev }}<li><a href="{{ $paginator.Prev.URL }}">View newer posts</a></li>{{ end }}
     </ul>
     {{- end }}
-
-
-
-
-	{{ if gt (len $list_images) 0 }}
-    <hr/>
-    <h2>Gallery:</h2>
-	<div class="photos-grid-container">
-		{{- $list := where .Pages ".Params.images" "!=" nil -}}
-        {{ range $index, $value := $list }}
-            <a href="{{ .Permalink }}">
-                {{ range first 1 .Params.images }}
-                    <img src="{{ . }}" loading="lazy" />
-                {{ end }}
-            </a>
-        {{ end }}
-        </div>
-	{{ end }}
-
-
-{{ $feed_url := $.Site.Params.feeds.bookmarks_json }}
-{{ $response := getJSON $feed_url }}
-{{ $title := .Title }}
-
-{{ if isset $response "items" }}
-
-{{ $tags := slice }}
-{{ range $response.items }}
- {{ if not (hasPrefix .id "link") }}
-    {{ $tags = $tags | append (split .tags ", ") }}
- {{ end }}
-{{ end }}
-{{ $tags = uniq $tags }}
-
-{{ range sort $tags }}
-    {{ $tag := . }}
-
-    {{ if eq $tag $title }}
-
-    <hr/>
-    <h2>Bookmarks:</h2>
-    {{ range $response.items }}
-    {{ $url := urls.Parse .url }}
-     {{ if not (hasPrefix .id "link") }}
-        {{ if strings.Contains .tags $tag }}
-	    <figure>
-            <figcaption><cite><a target="_blank" class="u-bookmark-of" href="{{ .url }}">{{ $url.Host }}</a><br/><small>Bookmarked: {{ time.Format "2 Jan 06" .date_published}}</small></cite></figcaption>
-            <blockquote>
-            <p style="overflow-wrap: anywhere;">{{ replace (replace ( .content_html | plainify | truncate 300 ) "Reader: " "") $url.Host "" }}</p>
-            </blockquote>
-      	</figure>
-        {{ end }}
-     {{ end }}
-    {{ end }}
-    {{ end }}
-
-{{ end }}
-
-{{ end }}
-
-{{ $bookshelf := .Title  }}
-{{ if in .Site.Data.bookshelves $bookshelf}}
-    <hr/>
-    <h2>Books:</h2>
-    <article>
-    {{ range (index .Site.Data.bookshelves $bookshelf) }}
-        <header>
-            <a href="https://micro.blog/books/{{ .isbn }}">
-                <img src="{{ .cover_url }}" loading="lazy" />
-            </a>
-        </header>
-        <div>
-            <b>Title</b>: 
-            <a href="https://micro.blog/books/{{ .isbn }}">
-                <h3 class="bookshelf__title">{{ .title }}</h3>
-            </a>
-        </div>
-        <div>
-            <b>Author</b>: {{ .author }}
-        </div>
-    {{ end }}
-    </ul>
-{{end}}
-
 {{ end }}

@@ -1,69 +1,16 @@
 {{ define "main" }}
 <article class="h-entry">
-    {{ if .Title }}
-        <header class="p-name">
-            <h1><a href="{{ .Permalink }}" class="u-url">
-                &#128279; {{ .Title }}
-            </a></h1>   
-        </header> 
-    {{ else }}
-        <header>
-            <h1><a href="{{ .Permalink }}" class="u-url">
-                <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
-                    &#128279; {{ .Date.Format "02 Jan 2006" }}
-                </time>
-            </a></h1>   
-        </header>
-    {{ end }}
-        <div>
-            <b>Published</b>: <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
-                {{ .Date.Format "02 Jan 2006" }}
-            </time>
-        </div> 
-        <div class="e-content">
-            {{ .Content }}
-        </div>
-    {{- if compare.Gt .Lastmod .Date -}}
-        <div>
-            <b>Updated</b>: <time class="header-updated" datetime="{{  .Lastmod.Format "2006-01-02T15:04:05-0700" }}">
-                {{  .Lastmod.Format "02 Jan 2006" }}
-            </time>
-        </div>
-    {{- end -}}
-    {{ if .Params.categories }}
-        <div>
-            <b>Filed under</b>:
-            <ul>
-                {{ range .Params.categories }} 
-                {{ $href := print (absURL "categories/") (urlize (replace . "tags-" "")) }}
-                <li><a class="p-category" href="{{ $href }}">{{ . | safeHTML }}</a></li> 
-                {{ end }}
-            </ul>
-        </div>
-    {{ end }}
-    
-    {{ $permalinkurl := urls.Parse .Permalink }}
-    {{ $relpermalink := .RelPermalink }}
-    {{ $backlinks := slice }}
-    {{- range .Site.Pages -}}
-        {{- if strings.Contains .Content $relpermalink -}}
-            {{ $backlinks = $backlinks | append . }}
-        {{- end -}}
-    {{- end -}}
-    {{ with $backlinks }}
-        <div>
-            <b>Backlinks</b>:
-            <ul>
-            {{ range $backlinks }}
-                {{ if .Title }}
-                    <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
-                {{- else}}
-                    <li><a href="{{ .Permalink }}">{{ .Summary | truncate 150 }}</a></li>
-                {{- end}}
-            {{end}}
-            </ul>
-        </div>
-    {{ end }}
+    <a style="display:none;" href="{{ .Permalink }}" class="u-url p-name">
+        {{ if .Title }}
+            {{ .Title }}
+        {{ end }}
+        <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
+            {{ .Date.Format "02 Jan 2006" }}
+        </time>
+    </a>
+    <div class="e-content">
+        {{ .Content }}
+    </div>
 </article>
 <script src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
 {{ end }}
