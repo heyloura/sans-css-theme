@@ -2,6 +2,26 @@
 <html lang="en">
     <head>
         {{ partial "head.html" . }}
+        <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+            .paste-block { position: absolute; overflow: hidden; }
+            .paste-block-mobile { display: none; }
+            [data-desktop-hidden="true"] { display: none; }
+            .pb-text { padding: 12px; line-height: 1.5; }
+            .pb-text a { color: var(--link-color, #4a90d9); }
+            .pb-html { padding: 12px; line-height: 1.6; overflow: auto; height: 100%; }
+            .pb-html img { max-width: 100%; height: auto; }
+            .pb-code { margin: 0; padding: 12px; font-family: monospace; font-size: 13px; border-radius: 3px; white-space: pre-wrap; overflow: auto; }
+            .pb-code:not(:has(.shiki)) { background: #f8f8f8; }
+            .pb-code pre { margin: 0; }
+            audio { background: transparent; -webkit-appearance: none; }
+            audio::-webkit-media-controls-panel { background: rgba(255,255,255,0.7); }
+            audio::-webkit-media-controls-enclosure { background: transparent; }
+            .pb-code .shiki { padding: 12px; border-radius: 3px; height: 100%; }
+            .pb-code .shiki pre { white-space: pre-wrap; height: 100%; }
+            .pb-code .shiki code { display: block; }
+        </style>
     </head>
     <body>
         {{ partial "header.html" . }}
