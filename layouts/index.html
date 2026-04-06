@@ -33,7 +33,7 @@ audio::-webkit-media-controls-enclosure { background: transparent; }
       <div class="paste-block" data-block="text" style="order:2;position:absolute;left:39.66668701171875px;top:20.66668701171875px;width:116.66665649414062px;height:45.661460876464844px;transform:rotate(0deg);z-index:108;aspect-ratio:116.66665649414062/45.661460876464844;"><div class="pb-text" style="font-family:monospace;color:#aa6c7f;text-shadow:2px 2px 0 #000;animation:blink 1s steps(1) infinite;--link-color:#f3d7a3;"><p><strong>New Thing!</strong></p></div></div>
       <div class="paste-block h-entry" data-block="text" style="order:3;position:absolute;left:135.33331298828125px;top:22px;width:625.6666870117188px;height:44.33331298828125px;transform:rotate(0deg);z-index:109;aspect-ratio:625.6666870117188/44.33331298828125;"><div class="pb-text" style="font-family:monospace;color:#f3d7a3;--link-color:#e9b052;"><p>
 
-{{ $paginator := .Paginate (where .Site.Pages.ByDate.Reverse "Type" "post") 10 }}
+{{ $paginator := .Paginate (where .Site.Pages.ByDate.Reverse "Type" "post") 1 }}
         {{ range $paginator.Pages  }}
             {{ if .Title }} {{ .Date.Format "02 Jan 2006" }} -
                 <a href="{{ .Permalink }}" class="u-url p-name">
@@ -44,7 +44,7 @@ audio::-webkit-media-controls-enclosure { background: transparent; }
                     <time class="dt-published p-name" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">
                         {{ .Date.Format "02 Jan 2006" }}
                     </time>
-                </a> - {{ .Content | strings.Truncate 15 }}
+                </a> - {{ .Content | plainify  | strings.Truncate 15 }}
             {{ end }}
         {{ end }}
 
