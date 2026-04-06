@@ -1,0 +1,21 @@
+{{ define "main" }}
+<div class="h-entry">
+  {{ if .Title }}
+  <header style="display:none;" class="p-name"><h4>{{ .Title }}</h4></header>
+  <a style="display:none;" href="{{ .Permalink }}" class="u-url">
+      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02 15:04:05 -0700" }}">{{ .Date.Format "2 Jan 06" }}</time>
+    </a>
+  {{ end }}
+
+  {{ if .Params.reply_to_url }} 
+    <a style="display:none;" href="{{ .Permalink }}" class="u-url">
+      <time class="dt-published" datetime="{{ .Date.Format "2006-01-02 15:04:05 -0700" }}">{{ .Date.Format "2 Jan 06" }}</time>
+    </a>
+    <div style="display:none;" class="reply-to"> Replying to: {{ if eq .Params.reply_to_hostname "micro.blog" }} <a href="{{ .Params.reply_to_url }}" class="u-in-reply-to">@{{ .Params.reply_to_username }}</a> {{ else }} <a href="{{ .Params.reply_to_url }}" class="u-in-reply-to">{{ .Params.reply_to_hostname }}</a> {{ end }} </div> 
+  {{ end }}
+
+  <article class="e-content">
+    {{ .Content }}
+  </article>
+</div>
+{{ end }}
