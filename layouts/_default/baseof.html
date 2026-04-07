@@ -49,5 +49,25 @@
 
         {{ block "main" . }}{{ end }}
         {{ partial "footer.html" . }}
+
+
+
+        <script>
+// Fix Hugo markdown-mangled URLs inside CSS
+// Hugo converts https://url into [text](https://url) even in style contexts
+(function(){
+  var re = /\[[^\]]*\]\((https?:\/\/[^)]+)\)/g;
+  document.querySelectorAll('style').forEach(function(s){
+    var t = s.textContent;
+    var f = t.replace(re, '$1');
+    if (f !== t) s.textContent = f;
+  });
+  document.querySelectorAll('[style]').forEach(function(el){
+    var t = el.getAttribute('style');
+    var f = t.replace(re, '$1');
+    if (f !== t) el.setAttribute('style', f);
+  });
+})();
+</script>
     </body>
 </html>
