@@ -1,0 +1,408 @@
+<style>
+/* ═══════════════════════════════════════════════
+   FLOATING COMMENT BUTTON
+   ═══════════════════════════════════════════════ */
+#comments-blinkie {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 9000;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  transition: transform 0.15s ease;
+  filter: drop-shadow(0 0 6px rgba(180, 120, 255, 0.6));
+}
+#comments-blinkie:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 12px rgba(180, 120, 255, 0.9));
+}
+#comments-blinkie img {
+  display: block;
+  width: 300px;
+  height: 40px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* ═══════════════════════════════════════════════
+   MODAL OVERLAY
+   ═══════════════════════════════════════════════ */
+#comments-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+}
+#comments-overlay.active {
+  display: flex;
+}
+
+/* ═══════════════════════════════════════════════
+   STARFIELD BACKGROUND (CSS-only)
+   ═══════════════════════════════════════════════ */
+#comments-modal {
+  position: relative;
+  width: 90vw;
+  max-width: 520px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  border: 2px solid #7b5ea7;
+  overflow: hidden;
+  background:
+    radial-gradient(1px 1px at 10% 15%, #fff 50%, transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.8) 50%, transparent 100%),
+    radial-gradient(1px 1px at 50% 10%, #fff 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 65%, rgba(200,180,255,0.9) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80% 25%, #fff 50%, transparent 100%),
+    radial-gradient(1px 1px at 15% 75%, rgba(255,255,255,0.7) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 40% 85%, rgba(180,200,255,0.8) 50%, transparent 100%),
+    radial-gradient(1px 1px at 90% 50%, #fff 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 30%, rgba(255,220,255,0.6) 50%, transparent 100%),
+    radial-gradient(1px 1px at 35% 55%, #fff 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 5% 90%, rgba(200,180,255,0.7) 50%, transparent 100%),
+    radial-gradient(1px 1px at 95% 80%, rgba(255,255,255,0.6) 50%, transparent 100%),
+    radial-gradient(ellipse at 30% 80%, rgba(90, 40, 120, 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 20%, rgba(30, 20, 80, 0.6) 0%, transparent 50%),
+    linear-gradient(160deg, #0a0015 0%, #120825 30%, #0d0a2a 60%, #08001a 100%);
+  box-shadow:
+    0 0 30px rgba(100, 60, 180, 0.4),
+    inset 0 0 60px rgba(20, 10, 40, 0.5);
+  font-family: "Courier New", "Lucida Console", monospace;
+  color: #d4c6f0;
+}
+
+/* ─── Title bar ─── */
+#comments-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(123, 94, 167, 0.5);
+  background: rgba(10, 0, 20, 0.6);
+  flex-shrink: 0;
+}
+#comments-modal-header h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #c4a8ff;
+  text-shadow: 0 0 8px rgba(180, 140, 255, 0.6);
+}
+#comments-close {
+  background: none;
+  border: 1px solid rgba(123, 94, 167, 0.5);
+  color: #a88cdb;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: all 0.15s;
+  line-height: 1;
+}
+#comments-close:hover {
+  background: rgba(123, 94, 167, 0.3);
+  color: #e0d0ff;
+  border-color: #a88cdb;
+}
+
+/* ─── Scrollable body ─── */
+#comments-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #7b5ea7 rgba(10, 0, 20, 0.3);
+}
+#comments-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+#comments-modal-body::-webkit-scrollbar-track {
+  background: rgba(10, 0, 20, 0.3);
+}
+#comments-modal-body::-webkit-scrollbar-thumb {
+  background: #7b5ea7;
+  border-radius: 3px;
+}
+
+/* ═══════════════════════════════════════════════
+   CONVERSATION.JS ELEMENT STYLES
+   ═══════════════════════════════════════════════ */
+
+/* Container */
+.microblog_conversation {
+  font-family: "Courier New", "Lucida Console", monospace;
+  font-size: 13px;
+  color: #d4c6f0;
+}
+
+/* Individual post */
+.microblog_post {
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(123, 94, 167, 0.35);
+  border-radius: 3px;
+  background: rgba(15, 5, 30, 0.5);
+  transition: border-color 0.2s;
+}
+.microblog_post:hover {
+  border-color: rgba(160, 120, 220, 0.6);
+}
+.microblog_post:last-of-type {
+  margin-bottom: 0;
+}
+
+/* User row */
+.microblog_user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.microblog_avatar {
+  border-radius: 2px;
+  border: 1px solid #7b5ea7;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+.microblog_fullname {
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #c4a8ff;
+  text-shadow: 0 0 6px rgba(180, 140, 255, 0.4);
+}
+
+/* Post text */
+.microblog_text {
+  line-height: 1.5;
+  color: #d4c6f0;
+}
+.microblog_text p {
+  margin: 0;
+}
+.microblog_text a {
+  color: #a8d4ff;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(168, 212, 255, 0.4);
+}
+.microblog_text a:hover {
+  color: #d0e8ff;
+  border-bottom-color: #d0e8ff;
+}
+
+/* Timestamp */
+.microblog_time {
+  margin-top: 8px;
+  font-size: 11px;
+}
+.microblog_time a {
+  color: #7b6a9e;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+.microblog_time a:hover {
+  color: #a88cdb;
+}
+
+/* ─── Reply form ─── */
+.microblog_reply_form {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(123, 94, 167, 0.35);
+}
+
+.microblog_reply_signin {
+  font-size: 12px;
+  color: #9a87b8;
+  margin: 0 0 12px 0;
+}
+.microblog_reply_signin a {
+  color: #c4a8ff;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(196, 168, 255, 0.4);
+  transition: all 0.15s;
+}
+.microblog_reply_signin a:hover {
+  color: #e0d0ff;
+  border-bottom-style: solid;
+  text-shadow: 0 0 6px rgba(180, 140, 255, 0.5);
+}
+
+/* Textarea */
+.microblog_reply_textarea {
+  margin: 0;
+}
+.microblog_reply_textarea textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  font-family: "Courier New", "Lucida Console", monospace;
+  font-size: 13px;
+  color: #d4c6f0;
+  background: rgba(10, 0, 25, 0.6);
+  border: 1px solid rgba(123, 94, 167, 0.5);
+  border-radius: 3px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.microblog_reply_textarea textarea:focus {
+  border-color: #a88cdb;
+  box-shadow: 0 0 12px rgba(140, 100, 200, 0.3);
+}
+.microblog_reply_textarea textarea::placeholder {
+  color: #5e4d7a;
+}
+
+/* Submit button */
+.microblog_reply_button {
+  margin: 8px 0 0 0;
+  text-align: right;
+}
+.microblog_reply_button input[type="submit"] {
+  font-family: "Courier New", "Lucida Console", monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  color: #c4a8ff;
+  background: rgba(60, 30, 100, 0.5);
+  border: 1px solid #7b5ea7;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.microblog_reply_button input[type="submit"]:hover:not(:disabled) {
+  background: rgba(90, 50, 140, 0.6);
+  border-color: #a88cdb;
+  box-shadow: 0 0 10px rgba(140, 100, 200, 0.3);
+  color: #e0d0ff;
+}
+.microblog_reply_button input[type="submit"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Empty state ─── */
+#comments-conversation:empty::after {
+  content: "Loading transmissions...";
+  display: block;
+  text-align: center;
+  padding: 30px 0;
+  color: #7b6a9e;
+  font-size: 12px;
+  letter-spacing: 1px;
+  animation: comments-pulse 2s ease-in-out infinite;
+}
+@keyframes comments-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ─── Twinkling star accents ─── */
+@keyframes comments-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+#comments-modal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 70%, rgba(200,180,255,0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.35) 50%, transparent 100%);
+  animation: comments-twinkle 4s ease-in-out infinite;
+  z-index: 0;
+}
+#comments-modal > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   SCANLINE OVERLAY (subtle CRT feel)
+   ═══════════════════════════════════════════════ */
+#comments-modal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  z-index: 2;
+}
+</style>
+
+<!-- Floating blinkie button -->
+<button id="comments-blinkie" aria-label="Open comments" title="Comments">
+  <img src="https://heyloura.com/uploads/2026/blinkiescafe-vj.gif" alt="Comments" width="300" height="40">
+</button>
+
+<!-- Modal -->
+<div id="comments-overlay">
+  <div id="comments-modal">
+    <div id="comments-modal-header">
+      <h3>// transmissions</h3>
+      <button id="comments-close" aria-label="Close comments">&times;</button>
+    </div>
+    <div id="comments-modal-body">
+      <div id="comments-conversation">
+        <script src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const blinkie = document.getElementById('comments-blinkie');
+  const overlay = document.getElementById('comments-overlay');
+  const closeBtn = document.getElementById('comments-close');
+
+  blinkie.addEventListener('click', function() {
+    overlay.classList.add('active');
+  });
+
+  closeBtn.addEventListener('click', function() {
+    overlay.classList.remove('active');
+  });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      overlay.classList.remove('active');
+    }
+  });
+})();
+</script>
