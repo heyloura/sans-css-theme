@@ -1,5 +1,5 @@
 {{ define "main" }}
-	
+<link rel="stylesheet" href="/css/non-paste-post.css">
 <ul>
 {{ range (where .Site.Pages ".Params.photos" "!=" nil ).GroupByDate "2006" }}
 	<li><a href="#{{ .Key }}">{{ .Key }}</a></li>

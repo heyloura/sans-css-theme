@@ -1,4 +1,5 @@
 {{ define "main" }}
+    <link rel="stylesheet" href="/css/non-paste-post.css">
     <ul class="h-feed">
     {{ $paginator := .Paginate (where .Pages.ByDate.Reverse "Type" "post") (index .Site.Params "archive-paginate" | default 10) }}
         {{ range $paginator.Pages  }}

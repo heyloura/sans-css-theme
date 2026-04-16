@@ -1,0 +1,23 @@
+{{ define "main" }}
+    <link rel="stylesheet" href="/css/non-paste-post.css">
+	{{ $list := ($.Site.GetPage "taxonomyTerm" "categories").Pages }}
+	
+	{{ $list := (where .Site.Pages "Type" "post") }}
+	<div class="h-feed">
+			<h4>Adventures</h4>
+		<div >
+		{{ range $list }}
+		<div class="h-entry ">
+			<p class="">
+				<a href="{{ .Permalink }}" class="u-url"><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05-0700" }}">{{ .Date.Format "2 Jan 06" }}</time></a>:
+				{{ if .Title }}
+					<span class="p-name"><b>{{ .Title }}</b></span> 
+				{{ end }}
+				<span class="p-summary">{{ .Summary | truncate 100 }}</span>
+			</p>
+		</div>
+		{{ end }}
+
+		</div>
+	</div>
+{{ end }}
