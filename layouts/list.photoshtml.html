@@ -1,31 +1,27 @@
 {{ define "main" }}
 <link rel="stylesheet" href="/css/non-paste-post.css">
-<ul>
-{{ range (where .Site.Pages ".Params.photos" "!=" nil ).GroupByDate "2006" }}
-	<li><a href="#{{ .Key }}">{{ .Key }}</a></li>
-{{ end }}
-</ul>
+<div class="photos-page">
 
+	<ul class="photos-year-nav">
+	{{ range (where .Site.Pages ".Params.photos" "!=" nil ).GroupByDate "2006" }}
+		<li><a href="#{{ .Key }}">{{ .Key }}</a></li>
+	{{ end }}
+	</ul>
 
-{{ range (where .Site.Pages ".Params.photos" "!=" nil ).GroupByDate "2006" }}
-<details>
-	<summary id="{{ .Key }}">{{ .Key }}</summary>
-
-	<div class="photos-grid-container">
-
-	{{ range .Pages }}
-		<a href="{{ .Permalink }}">
-			{{ range first 1 .Params.photos }}
-				<img src="{{ . }}" width="300" height="300" class="photos-grid-item" loading="lazy" />
-			{{ end }}
-		</a>
+	{{ range (where .Site.Pages ".Params.photos" "!=" nil ).GroupByDate "2006" }}
+	<details open>
+		<summary id="{{ .Key }}">{{ .Key }}</summary>
+		<div class="photos-grid-container">
+		{{ range .Pages }}
+			<a href="{{ .Permalink }}">
+				{{ range first 1 .Params.photos }}
+					<img src="{{ . }}" width="300" height="300" class="photos-grid-item" loading="lazy" />
+				{{ end }}
+			</a>
+		{{ end }}
+		</div>
+	</details>
 	{{ end }}
 
-	</div>
-
-</details>
-{{ end }}
-
-
-
+</div>
 {{ end }}

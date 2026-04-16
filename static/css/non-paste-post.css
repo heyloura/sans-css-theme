@@ -6,8 +6,8 @@
    NOT contain class="paste-canvas"
    =============================================== */
 
-/* ---- Reset & base ---- */
-.h-entry {
+/* ---- Theme variables ---- */
+:root {
   --space-bg: linear-gradient(160deg, #0a0015 0%, #120825 30%, #0d0a2a 60%, #08001a 100%);
   --star-field:
     radial-gradient(1px 1px at 10% 15%, #fff 50%, transparent 100%),
@@ -34,7 +34,11 @@
   --link-hover: #d0e8ff;
   --card-bg: rgba(15, 5, 30, 0.5);
   --font-mono: "Courier New", "Lucida Console", monospace;
+}
 
+/* ---- Shared starfield page background ---- */
+.h-entry,
+.h-feed {
   position: relative;
   background: var(--star-field), var(--space-bg);
   font-family: var(--font-mono);
@@ -46,7 +50,8 @@
 }
 
 /* ---- Twinkling star overlay ---- */
-.h-entry::before {
+.h-entry::before,
+.h-feed::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -67,7 +72,8 @@
 }
 
 /* ---- Scanline overlay (subtle CRT) ---- */
-.h-entry::after {
+.h-entry::after,
+.h-feed::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -83,9 +89,23 @@
 }
 
 /* Everything inside sits above the overlays */
-.h-entry > * {
+.h-entry > *,
+.h-feed > * {
   position: relative;
   z-index: 1;
+}
+
+/* ---- Strip page-level styles from .h-entry when nested in .h-feed ---- */
+.h-feed .h-entry {
+  position: static;
+  background: none;
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+}
+.h-feed .h-entry::before,
+.h-feed .h-entry::after {
+  display: none;
 }
 
 /* ===============================================
@@ -358,7 +378,8 @@
    MOBILE
    =============================================== */
 @media (max-width: 767px) {
-  .h-entry {
+  .h-entry,
+  .h-feed {
     padding: 32px 16px 48px;
   }
 
@@ -384,5 +405,321 @@
   .h-entry .e-content blockquote {
     padding: 12px 14px;
     margin: 20px 0;
+  }
+}
+
+/* ===============================================
+   ARCHIVE PAGE (.h-feed)
+   =============================================== */
+
+/* ---- Page heading ---- */
+.h-feed h4 {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 36px;
+  font-size: 20px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  text-shadow: 0 0 12px var(--purple-glow);
+}
+
+.h-feed h4::before {
+  content: "// ";
+  color: var(--text-muted);
+}
+
+/* ---- Entry list ---- */
+.h-feed .archive-list {
+  max-width: 640px;
+  margin: 0 auto;
+  list-style: none;
+  padding: 0;
+}
+
+/* ---- Individual entry row ---- */
+.h-feed .h-entry {
+  margin-bottom: 2px;
+}
+
+.h-feed .h-entry p {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.h-feed .h-entry p:hover {
+  background: var(--card-bg);
+  border-color: var(--purple-border-soft);
+}
+
+/* ---- Date ---- */
+.h-feed .h-entry .dt-published {
+  display: inline;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: normal;
+  text-shadow: none;
+  text-transform: none;
+}
+
+/* ---- Link wrapping the date ---- */
+.h-feed .h-entry .u-url {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: none;
+  transition: color 0.15s;
+}
+
+.h-feed .h-entry .u-url:hover {
+  color: var(--link-color);
+}
+
+/* ---- Title ---- */
+.h-feed .h-entry .p-name {
+  color: var(--text-accent);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 6px rgba(180, 140, 255, 0.3);
+}
+
+/* ---- Summary ---- */
+.h-feed .h-entry .p-summary {
+  color: var(--text-primary);
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+/* ---- Divider between entries ---- */
+.h-feed .h-entry + .h-entry {
+  border-top: 1px solid rgba(123, 94, 167, 0.15);
+}
+
+/* ---- Archive mobile ---- */
+@media (max-width: 767px) {
+  .h-feed h4 {
+    font-size: 17px;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+  }
+
+  .h-feed .h-entry p {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .h-feed .h-entry .p-summary {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+  }
+}
+
+/* ===============================================
+   PHOTOS PAGE (.photos-page)
+   =============================================== */
+.photos-page {
+  position: relative;
+  background: var(--star-field), var(--space-bg);
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  padding: 48px 24px 64px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.photos-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 70%, rgba(200,180,255,0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.35) 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 45% 90%, rgba(255,255,255,0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 75% 45%, rgba(200,180,255,0.25) 50%, transparent 100%);
+  animation: post-twinkle 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+.photos-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  z-index: 2;
+}
+
+.photos-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Year navigation ---- */
+.photos-year-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  padding: 0;
+  list-style: none;
+}
+
+.photos-year-nav li {
+  margin: 0;
+}
+
+.photos-year-nav a {
+  display: block;
+  padding: 6px 16px;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: var(--text-accent);
+  text-decoration: none;
+  border: 1px solid var(--purple-border-soft);
+  border-radius: 3px;
+  background: rgba(60, 30, 100, 0.25);
+  transition: all 0.2s;
+}
+
+.photos-year-nav a:hover {
+  background: rgba(90, 50, 140, 0.45);
+  border-color: var(--purple-border);
+  box-shadow: 0 0 10px rgba(140, 100, 200, 0.3);
+  color: #e0d0ff;
+}
+
+/* ---- Year sections (details/summary) ---- */
+.photos-page details {
+  max-width: 1000px;
+  margin: 0 auto 24px;
+}
+
+.photos-page details summary {
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  text-shadow: 0 0 10px var(--purple-glow);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--purple-border-soft);
+  margin-bottom: 20px;
+  list-style: none;
+  transition: color 0.15s;
+}
+
+.photos-page details summary::-webkit-details-marker {
+  display: none;
+}
+
+.photos-page details summary::before {
+  content: "[ + ] ";
+  color: var(--text-muted);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.photos-page details[open] summary::before {
+  content: "[ - ] ";
+}
+
+.photos-page details[open] summary {
+  color: #e0d0ff;
+  border-bottom-color: var(--purple-border);
+  box-shadow: 0 1px 0 0 rgba(140, 100, 200, 0.2);
+}
+
+.photos-page details summary:hover {
+  color: #e0d0ff;
+}
+
+/* ---- Photo grid ---- */
+.photos-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.photos-grid-container a {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 2px solid var(--purple-border-soft);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.photos-grid-container a:hover {
+  border-color: var(--purple-border);
+  box-shadow: 0 0 20px rgba(140, 100, 200, 0.45);
+  transform: scale(1.03);
+}
+
+.photos-grid-container img.photos-grid-item {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  box-shadow: none;
+  transition: none;
+}
+
+.photos-grid-container a:hover img.photos-grid-item {
+  box-shadow: none;
+}
+
+/* ---- Photos mobile ---- */
+@media (max-width: 767px) {
+  .photos-page {
+    padding: 32px 12px 48px;
+  }
+
+  .photos-year-nav {
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .photos-year-nav a {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .photos-page details summary {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  .photos-grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .photos-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
   }
 }
