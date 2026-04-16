@@ -1,0 +1,388 @@
+/* ===============================================
+   NON-PASTE POST STYLES
+   Galaxy theme to match the comments modal
+   ===============================================
+   Apply conditionally in Hugo when .Content does
+   NOT contain class="paste-canvas"
+   =============================================== */
+
+/* ---- Reset & base ---- */
+.h-entry {
+  --space-bg: linear-gradient(160deg, #0a0015 0%, #120825 30%, #0d0a2a 60%, #08001a 100%);
+  --star-field:
+    radial-gradient(1px 1px at 10% 15%, #fff 50%, transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.8) 50%, transparent 100%),
+    radial-gradient(1px 1px at 50% 10%, #fff 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 65%, rgba(200,180,255,0.9) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80% 25%, #fff 50%, transparent 100%),
+    radial-gradient(1px 1px at 15% 75%, rgba(255,255,255,0.7) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 40% 85%, rgba(180,200,255,0.8) 50%, transparent 100%),
+    radial-gradient(1px 1px at 90% 50%, #fff 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 30%, rgba(255,220,255,0.6) 50%, transparent 100%),
+    radial-gradient(1px 1px at 35% 55%, #fff 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 5% 90%, rgba(200,180,255,0.7) 50%, transparent 100%),
+    radial-gradient(1px 1px at 95% 80%, rgba(255,255,255,0.6) 50%, transparent 100%),
+    radial-gradient(ellipse at 30% 80%, rgba(90, 40, 120, 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 20%, rgba(30, 20, 80, 0.6) 0%, transparent 50%);
+  --purple-border: #7b5ea7;
+  --purple-border-soft: rgba(123, 94, 167, 0.35);
+  --purple-glow: rgba(180, 140, 255, 0.6);
+  --text-primary: #d4c6f0;
+  --text-accent: #c4a8ff;
+  --text-muted: #7b6a9e;
+  --link-color: #a8d4ff;
+  --link-hover: #d0e8ff;
+  --card-bg: rgba(15, 5, 30, 0.5);
+  --font-mono: "Courier New", "Lucida Console", monospace;
+
+  position: relative;
+  background: var(--star-field), var(--space-bg);
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  padding: 48px 24px 64px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ---- Twinkling star overlay ---- */
+.h-entry::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 70%, rgba(200,180,255,0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.35) 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 45% 90%, rgba(255,255,255,0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 75% 45%, rgba(200,180,255,0.25) 50%, transparent 100%);
+  animation: post-twinkle 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes post-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ---- Scanline overlay (subtle CRT) ---- */
+.h-entry::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  z-index: 2;
+}
+
+/* Everything inside sits above the overlays */
+.h-entry > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===============================================
+   POST TITLE & DATE
+   =============================================== */
+.h-entry .u-url.p-name {
+  display: block !important;
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 40px;
+  text-decoration: none;
+  color: var(--text-accent);
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px var(--purple-glow);
+  line-height: 1.4;
+}
+
+.h-entry .u-url.p-name:hover {
+  text-shadow: 0 0 20px rgba(180, 140, 255, 0.9);
+}
+
+.h-entry .dt-published {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: normal;
+  text-shadow: none;
+}
+
+/* ===============================================
+   CONTENT COLUMN
+   =============================================== */
+.h-entry .e-content {
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ---- Paragraphs ---- */
+.h-entry .e-content p {
+  margin: 0 0 24px;
+}
+
+/* ---- Links ---- */
+.h-entry .e-content a {
+  color: var(--link-color);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(168, 212, 255, 0.4);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.h-entry .e-content a:hover {
+  color: var(--link-hover);
+  border-bottom-color: var(--link-hover);
+}
+
+/* ===============================================
+   IMAGES
+   =============================================== */
+.h-entry .e-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 28px auto;
+  border-radius: 4px;
+  border: 2px solid var(--purple-border);
+  box-shadow: 0 0 20px rgba(100, 60, 180, 0.35);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.h-entry .e-content img:hover {
+  border-color: #a88cdb;
+  box-shadow: 0 0 30px rgba(140, 100, 200, 0.5);
+}
+
+/* ===============================================
+   VIDEO
+   =============================================== */
+.h-entry .e-content video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 28px auto;
+  border-radius: 4px;
+  border: 2px solid var(--purple-border);
+  box-shadow: 0 0 20px rgba(100, 60, 180, 0.35);
+}
+
+/* ===============================================
+   AUDIO
+   =============================================== */
+.h-entry .e-content audio {
+  display: block;
+  width: 100%;
+  margin: 28px auto;
+  border-radius: 4px;
+  filter: hue-rotate(240deg) saturate(0.7) brightness(0.9);
+}
+
+/* Audio in a card wrapper for visual consistency */
+.h-entry .e-content .audio-wrap {
+  padding: 16px;
+  margin: 28px 0;
+  border: 1px solid var(--purple-border-soft);
+  border-radius: 4px;
+  background: var(--card-bg);
+}
+
+/* ===============================================
+   CODE BLOCKS
+   =============================================== */
+.h-entry .e-content pre {
+  margin: 28px 0;
+  padding: 16px;
+  background: rgba(10, 0, 25, 0.7);
+  border: 1px solid var(--purple-border-soft);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  box-shadow: inset 0 0 30px rgba(20, 10, 40, 0.4);
+  scrollbar-width: thin;
+  scrollbar-color: var(--purple-border) rgba(10, 0, 20, 0.3);
+}
+
+.h-entry .e-content pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+.h-entry .e-content pre::-webkit-scrollbar-track {
+  background: rgba(10, 0, 20, 0.3);
+}
+
+.h-entry .e-content pre::-webkit-scrollbar-thumb {
+  background: var(--purple-border);
+  border-radius: 3px;
+}
+
+.h-entry .e-content code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* Inline code */
+.h-entry .e-content p code,
+.h-entry .e-content li code {
+  padding: 2px 6px;
+  background: rgba(60, 30, 100, 0.35);
+  border: 1px solid var(--purple-border-soft);
+  border-radius: 3px;
+  font-size: 0.9em;
+  color: var(--text-accent);
+}
+
+/* ===============================================
+   BLOCKQUOTES
+   =============================================== */
+.h-entry .e-content blockquote {
+  margin: 28px 0;
+  padding: 16px 20px;
+  border-left: 3px solid var(--purple-border);
+  background: var(--card-bg);
+  border-radius: 0 4px 4px 0;
+  font-style: italic;
+  color: #b8a8d8;
+  box-shadow: inset 0 0 20px rgba(20, 10, 40, 0.3);
+}
+
+.h-entry .e-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===============================================
+   LISTS
+   =============================================== */
+.h-entry .e-content ul,
+.h-entry .e-content ol {
+  margin: 0 0 24px;
+  padding-left: 24px;
+}
+
+.h-entry .e-content li {
+  margin-bottom: 8px;
+}
+
+.h-entry .e-content ul li::marker {
+  color: var(--purple-border);
+}
+
+.h-entry .e-content ol li::marker {
+  color: var(--text-muted);
+}
+
+/* ===============================================
+   HORIZONTAL RULE
+   =============================================== */
+.h-entry .e-content hr {
+  border: none;
+  height: 1px;
+  margin: 40px 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--purple-border) 20%,
+    var(--text-accent) 50%,
+    var(--purple-border) 80%,
+    transparent
+  );
+  box-shadow: 0 0 8px var(--purple-glow);
+}
+
+/* ===============================================
+   HEADINGS (h1-h4 within content)
+   =============================================== */
+.h-entry .e-content h1,
+.h-entry .e-content h2,
+.h-entry .e-content h3,
+.h-entry .e-content h4 {
+  color: var(--text-accent);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(180, 140, 255, 0.4);
+  margin: 36px 0 16px;
+  font-weight: bold;
+}
+
+.h-entry .e-content h1 { font-size: 20px; }
+.h-entry .e-content h2 { font-size: 17px; }
+.h-entry .e-content h3 { font-size: 15px; }
+.h-entry .e-content h4 { font-size: 14px; color: var(--text-muted); }
+
+/* ===============================================
+   TABLES (just in case)
+   =============================================== */
+.h-entry .e-content table {
+  width: 100%;
+  margin: 28px 0;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.h-entry .e-content th,
+.h-entry .e-content td {
+  padding: 10px 12px;
+  border: 1px solid var(--purple-border-soft);
+  text-align: left;
+}
+
+.h-entry .e-content th {
+  background: rgba(60, 30, 100, 0.4);
+  color: var(--text-accent);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.h-entry .e-content td {
+  background: var(--card-bg);
+}
+
+/* ===============================================
+   MOBILE
+   =============================================== */
+@media (max-width: 767px) {
+  .h-entry {
+    padding: 32px 16px 48px;
+  }
+
+  .h-entry .u-url.p-name {
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+  }
+
+  .h-entry .e-content {
+    font-size: 14px;
+  }
+
+  .h-entry .e-content img {
+    margin: 20px auto;
+  }
+
+  .h-entry .e-content pre {
+    font-size: 12px;
+    padding: 12px;
+  }
+
+  .h-entry .e-content blockquote {
+    padding: 12px 14px;
+    margin: 20px 0;
+  }
+}

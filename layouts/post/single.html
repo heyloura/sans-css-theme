@@ -9,6 +9,10 @@
         </time>
     </a>
     <div class="e-content">
+        {{ if not (findRE `class="paste-canvas"` .Content) }}
+            <link rel="stylesheet" href="/css/non-paste-post.css">
+        {{ end }}
+
         {{ .Content }}
     </div>
 </article>
