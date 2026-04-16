@@ -11,7 +11,12 @@
 				{{ if .Title }}
 					<span class="p-name"><b>{{ .Title }}</b></span> 
 				{{ end }}
-				<span class="p-summary">{{ .Summary | truncate 100 }}</span>
+				{{ $plain := .Summary | plainify | truncate 100 }}
+				{{ if gt (len (strings.TrimSpace $plain)) 0 }}
+					<span class="p-summary">{{ $plain }}</span>
+				{{ else }}
+					<span class="p-summary paste-label">[ paste ]</span>
+				{{ end }}
 			</p>
 		</div>
 		{{ end }}
